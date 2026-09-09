@@ -1,15 +1,23 @@
 # Dependencies
 node_modules/
+client/node_modules/
 
 # Build output
+dist/
 client/dist/
 
 # Logs
 *.log
+client/*.log
+logs/
 
-# Environment
+# Environment files
 .env
-.env.local
+.env.*
+!.env.example
+client/.env
+client/.env.*
+!client/.env.example
 
 # OS files
 .DS_Store

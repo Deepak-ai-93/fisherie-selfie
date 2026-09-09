@@ -191,18 +191,31 @@ export default function Booth() {
   }
 
   // ── upload to supabase ────────────────────────────────
-  async function uploadToServer() {
-    if (uploaded || !lastBlob) return true
+  async function uploadToServer(blobToUpload) {
+    const targetBlob = blobToUpload || lastBlob
+    if (uploaded || !targetBlob) return true
+    if (!isSupabaseConfigured || !supabase) {
+      console.error('Supabase not configured — check VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY')
+      setSaveState('error')
+      setSaveMsg('✗ Supabase not configured')
+      return false
+    }
     setSaveState('saving')
     setSaveMsg('Saving to campaign gallery…')
     try {
       const id = uid()
       const filename = `selfie_${nowStamp()}_${id}.png`
+
+      // 1. Upload image to Supabase storage bucket
       const { error: upErr } = await supabase.storage
         .from('selfies')
-        .upload(filename, lastBlob, { contentType: 'image/png' })
-      if (upErr) throw upErr
+        .upload(filename, targetBlob, { contentType: 'image/png', upsert: false })
+      if (upErr) {
+        console.error('Storage upload error:', upErr)
+        throw upErr
+      }
 
+      // 2. Insert consent record into database
       const ua = navigator.userAgent
       const { error: insErr } = await supabase.from('consents').insert({
         photo_id: id,
@@ -215,18 +228,23 @@ export default function Booth() {
         language: navigator.language,
         referer: document.referrer || 'direct',
         user_agent: ua.slice(0, 300),
-        file_size_kb: Math.round((lastBlob.size / 1024) * 10) / 10,
+        file_size_kb: Math.round((targetBlob.size / 1024) * 10) / 10,
       })
-      if (insErr) throw insErr
+      if (insErr) {
+        console.error('Database insert error:', insErr)
+        throw insErr
+      }
 
       setUploaded(true)
       setSaveState('saved')
-      setSaveMsg('✓ Saved to campaign gallery for marketing')
+      setSaveMsg('✓ Saved to campaign gallery')
+      showToast('Photo saved to campaign database ✓')
       return true
     } catch (e) {
-      console.error(e)
+      console.error('Upload failed:', e)
       setSaveState('error')
-      setSaveMsg('✗ Server save failed')
+      setSaveMsg('✗ Server save failed — ' + (e.message || 'unknown error'))
+      showToast('Save failed: ' + (e.message || 'Error'))
       return false
     }
   }
@@ -247,7 +265,9 @@ export default function Booth() {
       setUploaded(false)
       setSaveState('idle')
       showToast('Photo captured ✓')
-      if (consent) uploadToServer()
+      if (consent) {
+        uploadToServer(blob)
+      }
     } catch (e) {
       console.error(e)
       showToast('Capture failed — try again')
