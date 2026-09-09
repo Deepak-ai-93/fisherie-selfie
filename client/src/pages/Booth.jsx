@@ -7,7 +7,7 @@ import {
   CAPTION,
 } from '../lib/supabase'
 import { trackVisit, detectDevice, detectBrowser, uid, nowStamp } from '../lib/track'
-import frameUrl from '../assets/fisheries-frame-v2.svg'
+import frameUrl from '../assets/fisheries-frame-v2.png'
 import logoUrl from '../assets/fisheries.svg'
 
 const W = 1080
