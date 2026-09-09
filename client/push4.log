@@ -1,0 +1,12 @@
+Connecting to remote database...
+Do you want to push these migrations to the remote database?
+ • 20260909000000_init.sql
+
+ [Y/n] 
+Applying migration 20260909000000_init.sql...
+Warning: failed to cache migrations catalog: error exporting pg-delta catalog: failed to inspect docker image: error during connect: in the default daemon configuration on Windows, the docker client must be run with elevated privileges to connect: Get "http://%2F%2F.%2Fpipe%2Fdocker_engine/v1.51/images/public.ecr.aws/supabase/edge-runtime:v1.74.2/json": open //./pipe/docker_engine: The system cannot find the file specified.:
+
+Finished supabase db push.
+A new version of Supabase CLI is available: v2.117.0 (currently installed v2.109.1)
+We recommend updating regularly for new features and bug fixes: https://supabase.com/docs/guides/cli/getting-started#updating-the-supabase-cli
+Docker Desktop is a prerequisite for local development. Follow the official docs to install: https://docs.docker.com/desktop

@@ -1,0 +1,3 @@
+Connecting to remote database...
+failed to connect to postgres: failed to connect to `host=db.htcaumblspiphopcakqj.supabase.co user=postgres database=postgres`: hostname resolving error (lookup db.htcaumblspiphopcakqj.supabase.co: no such host)
+Try rerunning the command with --debug to troubleshoot the error.
