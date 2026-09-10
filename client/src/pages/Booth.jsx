@@ -169,7 +169,7 @@ export default function Booth() {
     }
 
     ctx.save()
-    ctx.translate(38, H / 2 + 60)
+    ctx.translate(38, H / 2 + 100)
     ctx.rotate(-Math.PI / 2)
     ctx.font = 'bold 22px -apple-system, Segoe UI, Roboto, sans-serif'
     ctx.textAlign = 'center'
